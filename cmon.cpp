@@ -131,7 +131,7 @@ void GetProcessResourceUsage(SIZE_T &processMemoryUsage) {
   // Get memory usage
   PROCESS_MEMORY_COUNTERS_EX memCounters;
   if (GetProcessMemoryInfo(hProcess, (PROCESS_MEMORY_COUNTERS *)&memCounters, sizeof(memCounters))) {
-    processMemoryUsage = memCounters.WorkingSetSize / (1024 * 1024); // Convert to MB
+    processMemoryUsage = memCounters.WorkingSetSize * B_TO_MB; // Convert to MB
   } else {
     processMemoryUsage = 0; // Set to 0 if the call fails
     std::cerr << "Failed to retrieve process memory info. Error: " << GetLastError() << std::endl;
