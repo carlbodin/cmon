@@ -139,16 +139,18 @@ void GetProcessResourceUsage(SIZE_T &processMemoryUsage) {
 }
 
 int main() {
+  std::vector<double> cpuUsagePerCore;
+  int cpuFrequency = 0.0;
+  double idleTime = 0.0;
+  double totalCpuUsage = 0.0;
+  GetCpuUsagePerCore(cpuUsagePerCore, totalCpuUsage, cpuFrequency, idleTime);
+
   // This only works when run as admin.
-  SetConsoleSize(75, 22);
+  SetConsoleSize(74, 10 + cpuUsagePerCore.size());
 
   while (true) {
 
     // Get CPU usage
-    std::vector<double> cpuUsagePerCore;
-    int cpuFrequency = 0.0;
-    double idleTime = 0.0;
-    double totalCpuUsage = 0.0;
     GetCpuUsagePerCore(cpuUsagePerCore, totalCpuUsage, cpuFrequency, idleTime);
 
     // Get memory and swap usage

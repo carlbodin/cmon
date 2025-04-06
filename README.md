@@ -54,7 +54,7 @@ Build binary and link `pdh.lib` library, which contains the Performance Data Hel
 (PDH) API functions.
 
 ```cmd
-x86_64-w64-mingw32-g++ -static-libgcc -static-libstdc++ -Ofast -o build/cmon.exe cmon.cpp cmon.res -lpdh
+x86_64-w64-mingw32-g++ -static -static-libgcc -static-libstdc++ -Ofast -o build/cmon.exe cmon.cpp cmon.res -lpdh
 ```
 
 Embed the manifest asking for admin privileges using `mt` in the Windows SDK. Make sure
