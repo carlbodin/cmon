@@ -47,7 +47,7 @@ Build binary and link `pdh.lib` library, which contains the Performance Data Hel
 (PDH) API functions.
 
 ```cmd
-x86_64-w64-mingw32-g++ -Os -o build/cmon.exe cmon.cpp -lpdh
+x86_64-w64-mingw32-g++ -static-libgcc -static-libstdc++ -Ofast -o build/cmon.exe cmon.cpp -lpdh
 ```
 
 Run program in separate cmd instance.
