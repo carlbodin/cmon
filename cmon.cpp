@@ -7,12 +7,14 @@
 
 #pragma comment(lib, "pdh.lib")
 
-void GetCpuUsagePerCore(std::vector<double> &cpuUsagePerCore) {
+void GetCpuUsagePerCore(std::vector<double> &cpuUsagePerCore,
+                        double &totalCpuUsage) {
   PDH_HQUERY query;
   std::vector<PDH_HCOUNTER> counters;
+  PDH_HCOUNTER totalCounter;
   PDH_FMT_COUNTERVALUE counterVal;
 
-  // Use 0 instead of NULL for DWORD_PTR arguments
+  // Open the query
   PdhOpenQuery(NULL, 0, &query);
 
   // Get the number of logical processors
@@ -29,34 +31,52 @@ void GetCpuUsagePerCore(std::vector<double> &cpuUsagePerCore) {
     counters.push_back(counter);
   }
 
+  // Add a counter for total CPU usage
+  PdhAddCounterW(query, L"\\Processor(_Total)\\% Processor Time", 0,
+                 &totalCounter);
+
+  // Collect data
   PdhCollectQueryData(query);
-  Sleep(500);
+  Sleep(750);
   PdhCollectQueryData(query);
 
+  // Get per-core CPU usage
   cpuUsagePerCore.clear();
   for (const auto &counter : counters) {
     PdhGetFormattedCounterValue(counter, PDH_FMT_DOUBLE, NULL, &counterVal);
     cpuUsagePerCore.push_back(counterVal.doubleValue);
   }
 
+  // Get total CPU usage
+  PdhGetFormattedCounterValue(totalCounter, PDH_FMT_DOUBLE, NULL, &counterVal);
+  totalCpuUsage = counterVal.doubleValue;
+
+  // Close the query
   PdhCloseQuery(query);
 }
 
 int main() {
   while (true) {
     std::vector<double> cpuUsagePerCore;
-    GetCpuUsagePerCore(cpuUsagePerCore);
+    double totalCpuUsage = 0.0;
+
+    GetCpuUsagePerCore(cpuUsagePerCore, totalCpuUsage);
 
     system("cls"); // Clear the console screen
-    std::cout << "CPU Usage Per Core:" << std::endl;
+    std::cout << std::fixed << std::setprecision(1);
+    std::cout << "===================" << "\n";
+    std::cout << "|" << "CPU Usage: " << std::setw(4) << totalCpuUsage << "% |"
+              << std::endl;
+    std::cout << "|" << "-----------------|" << std::endl;
+    std::cout << "|" << "Per Core:        |" << std::endl;
     for (size_t i = 0; i < cpuUsagePerCore.size(); ++i) {
       // Set fixed-point notation and 1 decimal place
-      std::cout << std::fixed << std::setprecision(1);
-      std::cout << std::setw(2) << i << ": " << cpuUsagePerCore[i] << "%"
-                << std::endl;
+      std::cout << "|" << std::setw(2) << i << ": " << std::setw(4)
+                << cpuUsagePerCore[i] << "%        |" << std::endl;
     }
-
-    Sleep(500); // Update every second
+    std::cout << "===================" << "\n\n";
+    std::cout << "Press Ctrl+C to exit." << std::endl;
+    Sleep(750); // Update every second
   }
   return 0;
 }
