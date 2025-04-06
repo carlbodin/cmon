@@ -54,7 +54,7 @@ Build binary and link `pdh.lib` library, which contains the Performance Data Hel
 (PDH) API functions.
 
 ```cmd
-x86_64-w64-mingw32-g++ -static-libgcc -static-libstdc++ -Ofast -o build/cmon.exe cmon.cpp -lpdh
+x86_64-w64-mingw32-g++ -static-libgcc -static-libstdc++ -Ofast -o build/cmon.exe cmon.cpp cmon.res -lpdh
 ```
 
 Embed the manifest asking for admin privileges using `mt` in the Windows SDK. Make sure
@@ -64,6 +64,14 @@ following.
 
 ```cmd
 mt.exe -manifest cmon.manifest -outputresource:build\cmon.exe;1
+```
+
+To add an icon, save it as .ico in the project. Since I use MinGW, I need to compile it
+to `.res` using `windres` first. Then, add the `cmon.res` input file to the build
+command.
+
+```cmd
+windres resources/cmon.rc -O coff -o cmon.res
 ```
 
 Run program in separate cmd instance.
