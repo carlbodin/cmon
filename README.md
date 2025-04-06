@@ -50,6 +50,15 @@ Build binary and link `pdh.lib` library, which contains the Performance Data Hel
 x86_64-w64-mingw32-g++ -static-libgcc -static-libstdc++ -Ofast -o build/cmon.exe cmon.cpp -lpdh
 ```
 
+Embed the manifest asking for admin privileges using `mt` in the Windows SDK. Make sure
+to add its path to the user's Path environment variable:
+`C:\Program Files (x86)\Windows Kits\10\bin\<version>\x64\mt.exe`. Then you can run the
+following.
+
+```cmd
+mt.exe -manifest cmon.manifest -outputresource:build\cmon.exe;1
+```
+
 Run program in separate cmd instance.
 
 ```cmd
@@ -65,7 +74,7 @@ del build\*.exe
 Deploy to bin folder that I have on path.
 
 ```cmd
-copy build\cmon.exe C:\Users\carl\bin
+copy /Y build\cmon.exe C:\Users\carl\bin
 ```
 
 Check size of files in build folder.

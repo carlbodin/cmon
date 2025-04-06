@@ -7,6 +7,36 @@
 
 #pragma comment(lib, "pdh.lib")
 
+void SetConsoleSize(int width, int height) {
+  HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+  if (hConsole == INVALID_HANDLE_VALUE) {
+    std::cerr << "Failed to get console handle." << std::endl;
+    return; // Exit the function if getting the console handle fails
+  }
+
+  // Set the console window size
+  SMALL_RECT windowSize;
+  windowSize.Left = 0;
+  windowSize.Top = 0;
+  windowSize.Right = width - 1;
+  windowSize.Bottom = height - 1;
+  if (!SetConsoleWindowInfo(hConsole, TRUE, &windowSize)) {
+    DWORD error = GetLastError();
+    std::cerr << "Failed to set console window size. Error: " << error
+              << std::endl;
+  }
+  // Ensure the buffer size is at least as large as the window size
+  COORD bufferSize;
+  bufferSize.X = width;
+  bufferSize.Y = height;
+  if (!SetConsoleScreenBufferSize(hConsole, bufferSize)) {
+    DWORD error = GetLastError();
+    std::cerr << "Failed to set screen buffer size. Error: " << error
+              << std::endl;
+    return; // Exit the function if setting the buffer size fails
+  }
+}
+
 void GetCpuUsagePerCore(std::vector<double> &cpuUsagePerCore,
                         double &totalCpuUsage) {
   PDH_HQUERY query;
@@ -56,6 +86,9 @@ void GetCpuUsagePerCore(std::vector<double> &cpuUsagePerCore,
 }
 
 int main() {
+  // if run as admin, set the console size
+  SetConsoleSize(40, 30);
+
   while (true) {
     std::vector<double> cpuUsagePerCore;
     double totalCpuUsage = 0.0;
