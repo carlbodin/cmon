@@ -1,22 +1,29 @@
 # CPU Monitor
 
 A lightweight command line hardware monitor, developed on Windows in C++ for Windows 11.
-Uses 28 MB of RAM and has a negligible CPU footprint.
+Uses 10 MB of RAM and has a tiny CPU footprint.
 
-```cmd
-CPU Usage Per Core:
- 0: 0.0%
- 1: 2.3%
- 2: 0.0%
- 3: 0.0%
- 4: 0.0%
- 5: 5.3%
- 6: 2.3%
- 7: 0.0%
- 8: 0.0%
- 9: 0.0%
-10: 0.0%
-11: 0.0%
+```plaintext
+|         CPU          |         Memory        |          Swap          |
+|======================|=======================|========================|
+|  CPU Usage:    13.3% |   Percent:     42.7%  |    Percent:     61.9%  |
+|  Idle Time:    85.2% |  Used Mem:   6965 MB  |  Used Swap:   1426 MB  |
+|   CPU Freq: 3600 MHz | Total Mem:  16307 MB  | Total Swap:   2304 MB  |
+|----------------------|-----------------------|------------------------|
+| Per Core:            |
+|  1:   23.3%          |
+|  2:   17.1%          |
+|  3:   25.4%          |
+|  4:   15.0%          |
+|  5:   10.9%          |
+|  6:   21.3%          |
+|  7:    4.7%          |
+|  8:    8.8%          |
+|  9:    8.8%          |
+| 10:    4.7%          |
+| 11:   10.9%          |
+| 12:    8.8%          |
+|----------------------|                            Exit: Ctrl + C
 ```
 
 ## Usage
