@@ -100,18 +100,29 @@ void GetMemoryUsage(double &memoryUsagePerc, double &swapUsagePerc, SIZE_T &tota
 
   if (GlobalMemoryStatusEx(&memStatus)) {
     // Calculate memory usage as a percentage
-    usedMemory = memStatus.ullTotalPhys - memStatus.ullAvailPhys;
+    usedMemory = (memStatus.ullTotalPhys - memStatus.ullAvailPhys);
     memoryUsagePerc = (double)usedMemory / memStatus.ullTotalPhys * 100.0;
 
     // Calculate swap usage as a percentage
-    usedSwap = (memStatus.ullTotalPageFile - memStatus.ullTotalPhys) - (memStatus.ullAvailPageFile - memStatus.ullAvailPhys);
-    swapUsagePerc = (double)usedSwap / (memStatus.ullTotalPageFile - memStatus.ullTotalPhys) * 100.0;
-
-    // Get total and available sizes in MB
+    if (memStatus.ullTotalPageFile > memStatus.ullTotalPhys) {
+      totalSwap = memStatus.ullTotalPageFile - memStatus.ullTotalPhys;
+      usedSwap = ((memStatus.ullTotalPageFile - memStatus.ullTotalPhys) - (memStatus.ullAvailPageFile - memStatus.ullAvailPhys));
+      swapUsagePerc = (double)usedSwap / (memStatus.ullTotalPageFile - memStatus.ullTotalPhys) * 100.0;
+    } else if (memStatus.ullTotalPageFile == 0) {
+      totalSwap = 0;
+      usedSwap = 0;
+      swapUsagePerc = 0.0;
+    } else {
+      totalSwap = memStatus.ullTotalPageFile;
+      usedSwap = memStatus.ullTotalPageFile - memStatus.ullAvailPageFile;
+      swapUsagePerc = (double)usedSwap / memStatus.ullTotalPageFile * 100.0;
+    }
     totalMemory = memStatus.ullTotalPhys * B_TO_MB;
     usedMemory = usedMemory * B_TO_MB;
-    totalSwap = (memStatus.ullTotalPageFile - memStatus.ullTotalPhys) * B_TO_MB;
     usedSwap = usedSwap * B_TO_MB;
+    totalSwap = totalSwap * B_TO_MB;
+    swapUsagePerc = swapUsagePerc > 100.0 ? 0.0 : swapUsagePerc; // Cap at 100%
+    usedSwap = usedSwap > totalSwap ? 0.0 : usedSwap;            // Cap at total swap
   } else {
     // If the function fails, set usage to -1 and sizes to 0
     memoryUsagePerc = -1.0;
