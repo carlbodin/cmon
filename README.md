@@ -28,7 +28,8 @@ Uses 10 MB of RAM and has a tiny CPU footprint.
 
 ## Usage
 
-Add to path in your user environment variables and run in `Command Prompt`.
+Add to path in your user's environment variable PATH and run whereever in
+`Command Prompt`.
 
 ```cmd
 cmon
@@ -40,18 +41,16 @@ Exit with `Ctrl + C`.
 
 ### Installation
 
-`MSYS2`
-
-`MinGW`
-
-`g++` and `gdb`
+`MSYS2`, `MinGW`, `build-essentials`, `g++`, and `gdb`. See
+[guide](https://code.visualstudio.com/docs/cpp/config-mingw).
 
 Dependency `pdh.lib` already in win11 environment.
 
 ### Build
 
 Build binary and link `pdh.lib` library, which contains the Performance Data Helper
-(PDH) API functions.
+(PDH) API functions. Also, link `libgcc` and `libstdc++` DLL's explicitly. Link other
+required DLL's using `-static`.
 
 ```cmd
 x86_64-w64-mingw32-g++ -static -static-libgcc -static-libstdc++ -Ofast -o build/cmon.exe cmon.cpp cmon.res -lpdh
@@ -96,4 +95,10 @@ Check size of files in build folder.
 
 ```cmd
 size -d -t build/*
+```
+
+Check your user's PATH env var.
+
+```cmd
+reg query "HKCU\Environment" /v Path
 ```
