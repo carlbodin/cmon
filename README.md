@@ -1,7 +1,7 @@
 # CPU Monitor
 
 A lightweight command line hardware monitor, developed on Windows in C++ for Windows 11.
-Uses 10 MB of RAM and has a tiny CPU footprint.
+Uses 4.2 MB of RAM (+33 MB for the terminal window) and has a negligable CPU footprint.
 
 ```plaintext
 |         CPU          |         Memory        |          Swap          |
@@ -30,8 +30,8 @@ Uses 10 MB of RAM and has a tiny CPU footprint.
 
 Download the executable from
 [Releases](https://github.com/carlbodin/cmon/releases/latest), or compile it from the
-source code, and simply run it. **Tip:** Run it from the terminal to avoid Windows being
-suspicious of malware.
+source code, and run it. Since the executable is unsigned, the popup
+`Windows protected your PC` will appear at first launch.
 
 ```cmd
 cmon
@@ -120,5 +120,5 @@ del build\*.exe
 Check size of files in the build folder.
 
 ```cmd
-dir /o:-s
+dir build /o:-s
 ```
