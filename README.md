@@ -28,8 +28,10 @@ Uses 10 MB of RAM and has a tiny CPU footprint.
 
 ## Usage
 
-Add to path in your user's environment variable PATH and run whereever in
-`Command Prompt`.
+Download the executable from
+[Releases](https://github.com/carlbodin/cmon/releases/latest), or compile it from the
+source code, and simply run it. **Tip:** Run it from the terminal to avoid Windows being
+suspicious of malware.
 
 ```cmd
 cmon
@@ -48,6 +50,14 @@ Dependency `pdh.lib` already in win11 environment.
 
 ### Build
 
+**Optional:** If you want to add an icon, save it as .ico in the project. Since I use
+MinGW, I need to compile it to `.res` using `windres` first. Then, add the `cmon.res`
+input file to the build command.
+
+```cmd
+windres resources/cmon.rc -O coff -o cmon.res
+```
+
 Build binary and link `pdh.lib` library, which contains the Performance Data Helper
 (PDH) API functions. Also, link `libgcc` and `libstdc++` DLL's explicitly. Link other
 required DLL's using `-static`.
@@ -56,7 +66,8 @@ required DLL's using `-static`.
 x86_64-w64-mingw32-g++ -static -static-libgcc -static-libstdc++ -Ofast -o build/cmon.exe cmon.cpp cmon.res -lpdh
 ```
 
-Embed the manifest asking for admin privileges using `mt` in the Windows SDK. Make sure
+If you want the program to ask for admin privileges automatically when running, you can
+embed a "manifest" asking for this by using the `mt` tool in the Windows SDK. Make sure
 to add its path to the user's Path environment variable:
 `C:\Program Files (x86)\Windows Kits\10\bin\<version>\x64\mt.exe`. Then you can run the
 following.
@@ -65,40 +76,49 @@ following.
 mt.exe -manifest cmon.manifest -outputresource:build\cmon.exe;1
 ```
 
-To add an icon, save it as .ico in the project. Since I use MinGW, I need to compile it
-to `.res` using `windres` first. Then, add the `cmon.res` input file to the build
-command.
+Check your user's PATH environment variable.
 
 ```cmd
-windres resources/cmon.rc -O coff -o cmon.res
+reg query "HKCU\Environment" /v Path
 ```
 
-Run program in separate cmd instance.
+### Run
+
+Run the program by using this command while the `cmon.exe` is on the path.
+
+```cmd
+cmon
+```
+
+Run the program directly from the build folder in separate cmd instance.
 
 ```cmd
 start build\cmon
 ```
 
-Empty build folder.
+### Deploy
 
-```cmd
-del build\*.exe
-```
-
-Deploy to bin folder that I have on path.
+Copy the program to a folder that I have on my user's PATH.
 
 ```cmd
 copy /Y build\cmon.exe C:\Users\carl\bin
 ```
 
-Check size of files in build folder.
+### Miscellaneous
+
+#### Clear Build Folder
+
+To empty the build folder, run the following command. May be useful for debugging or
+saving disk space.
 
 ```cmd
-size -d -t build/*
+del build\*.exe
 ```
 
-Check your user's PATH env var.
+#### Check Size of Build
+
+Check size of files in the build folder.
 
 ```cmd
-reg query "HKCU\Environment" /v Path
+dir /o:-s
 ```
