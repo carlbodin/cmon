@@ -148,6 +148,7 @@ void GetProcessResourceUsage(SIZE_T &processMemoryUsage) {
 }
 
 int main() {
+  system("cls");
   CpuUsageMonitor cpuMonitor;
   HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
   SetConsoleSize(74, 20);
