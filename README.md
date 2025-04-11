@@ -1,7 +1,7 @@
-# CPU Monitor
+# cmon
 
-A lightweight command line hardware monitor, developed on Windows in C++ for Windows 11.
-Uses 4.2 MB of RAM (+33 MB for the terminal window) and has a negligable CPU footprint.
+A lightweight CPU monitoring program for Windows 11 running in terminal. Uses 4.2 MB of
+RAM, in addition to the RAM of your terminal window, and has a negligable CPU footprint.
 
 ```plaintext
 |         CPU          |         Memory        |          Swap          |
@@ -31,13 +31,7 @@ Uses 4.2 MB of RAM (+33 MB for the terminal window) and has a negligable CPU foo
 Download the executable from
 [Releases](https://github.com/carlbodin/cmon/releases/latest), or compile it from the
 source code, and run it. Since the executable is unsigned, the popup
-`Windows protected your PC` will appear at first launch.
-
-```cmd
-cmon
-```
-
-Exit with `Ctrl + C`.
+`Windows protected your PC` will appear at first launch. Exit with `Ctrl + C`.
 
 ## Development Setup
 
@@ -46,7 +40,7 @@ Exit with `Ctrl + C`.
 `MSYS2`, `MinGW`, `build-essentials`, `g++`, and `gdb`. See
 [guide](https://code.visualstudio.com/docs/cpp/config-mingw).
 
-Dependency `pdh.lib` already in win11 environment.
+Dependency `pdh.lib` already in the Windows 11 environment.
 
 ### Build
 
