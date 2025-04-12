@@ -1,7 +1,7 @@
 # cmon
 
-A lightweight CPU monitoring program for Windows 11 running in terminal. Uses 4.2 MB of
-RAM, in addition to the RAM of your terminal window, and has a negligable CPU footprint.
+A lightweight CPU monitoring program in terminal for Windows. Uses 4.2 MB of RAM, in
+addition to the RAM of your terminal window, and has a negligable CPU footprint.
 
 ```plaintext
 |         CPU          |         Memory        |          Swap          |
@@ -24,6 +24,26 @@ RAM, in addition to the RAM of your terminal window, and has a negligable CPU fo
 | 11:   10.9%          |
 | 12:    8.8%          |
 |----------------------|                            Exit: Ctrl + C
+```
+
+Run with argument `bar` to see this instead.
+
+```plaintext
+ CPU [██                                                              3%]
+ Mem [████████████████████████████                                   43%]
+Swap [███████████████████████████████████████████████████            77%]
+```
+
+Run `help` to see program instructions.
+
+```plaintext
+Usage: cmon [bar|help]
+
+A lightweight CPU monitoring program for Windows 11 running in terminal.
+
+Options:\carl\git\cmon>
+  bar   : Display info in bar graphs.
+  help  : Display this help message.
 ```
 
 ## Usage
@@ -82,6 +102,12 @@ Run the program by using this command while the `cmon.exe` is on the path.
 
 ```cmd
 cmon
+```
+
+Append command line argument `bar` to see a bar representation instead.
+
+```cmd
+cmon bar
 ```
 
 Run the program directly from the build folder in separate cmd instance.
