@@ -1,34 +1,35 @@
 # cmon
 
-A lightweight CPU monitoring program in terminal for Windows. Uses 4.2 MB of RAM, in
+A lightweight CPU monitoring program in terminal for Windows. Uses 4.9 MB of RAM, in
 addition to the RAM of your terminal window, and has a negligable CPU footprint.
 
 ```plaintext
 |         CPU          |         Memory        |          Swap          |
 |======================|=======================|========================|
-|  CPU Usage:    13.3% |   Percent:     42.7%  |    Percent:     61.9%  |
-|  Idle Time:    85.2% |  Used Mem:   6965 MB  |  Used Swap:   1426 MB  |
-|   CPU Freq: 3600 MHz | Total Mem:  16307 MB  | Total Swap:   2304 MB  |
+|  CPU Usage:     2.3% |   Percent:     39.4%  |    Percent:     71.6%  |
+|  Idle Time:    98.1% |  Used Mem:   6426 MB  |  Used Swap:   1742 MB  |
+|   CPU Freq: 3574 MHz | Total Mem:  16307 MB  | Total Swap:   2432 MB  |
 |----------------------|-----------------------|------------------------|
-| Per Core:            |
-|  1:   23.3%          |
-|  2:   17.1%          |
-|  3:   25.4%          |
-|  4:   15.0%          |
-|  5:   10.9%          |
-|  6:   21.3%          |
-|  7:    4.7%          |
-|  8:    8.8%          |
-|  9:    8.8%          |
-| 10:    4.7%          |
-| 11:   10.9%          |
-| 12:    8.8%          |
+| Per Core:            | AMD Ryzen 5 3600 6-Core Processor
+|  1:    0.5%          |
+|  2:    2.0%          |
+|  3:    0.5%          |
+|  4:    8.2%          |
+|  5:    2.0%          |
+|  6:    5.1%          |
+|  7:    2.0%          |
+|  8:    2.0%          |
+|  9:    2.0%          |
+| 10:    2.0%          |
+| 11:    0.5%          |
+| 12:    0.5%          |
 |----------------------|
 ```
 
 Run with argument `bar` to see this instead.
 
 ```plaintext
+AMD Ryzen 5 3600 6-Core Processor
  CPU [██                                                              3%]
  Mem [████████████████████████████                                   43%]
 Swap [███████████████████████████████████████████████████            77%]
@@ -77,7 +78,7 @@ Build binary and link `pdh.lib` library, which contains the Performance Data Hel
 required DLL's using `-static`.
 
 ```cmd
-x86_64-w64-mingw32-g++ -static -static-libgcc -static-libstdc++ -Ofast -o build/cmon.exe cmon.cpp cmon.res -lpdh
+x86_64-w64-mingw32-g++ -static -static-libgcc -static-libstdc++ -Ofast -o build/cmon.exe Main.cpp cmon.res -lpdh -lole32 -loleaut32 -lwbemuuid
 ```
 
 If you want the program to ask for admin privileges automatically when running, you can

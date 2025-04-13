@@ -1,33 +1,17 @@
 #include <conio.h> // For _kbhit() and _getch()
 #include <cstdlib>
-#include <iomanip> // Add this include for std::setprecision
 #include <iostream>
 #include <pdh.h>
 #include <psapi.h> // For GetProcessMemoryInfo
 #include <string>
 #include <vector>
-#include <windows.h>
+#include <wincrypt.h>
 #include <winscard.h>
 
 #pragma comment(lib, "psapi.lib") // Link the PSAPI library
 #pragma comment(lib, "pdh.lib")
 
-void ClearConsole(HANDLE hConsole) {
-  // Move cursor to top left corner instead of clearing the entire terminal for the new
-  // loop information.
-
-  COORD topLeft = {0, 0};
-  SetConsoleCursorPosition(hConsole, topLeft);
-}
-
-void SetConsoleSize(HANDLE hConsole, short width, short height) {
-  SMALL_RECT windowSize = {0, 0, static_cast<SHORT>(width - 1),
-                           static_cast<SHORT>(height - 1)};
-  COORD bufferSize = {width, height};
-
-  SetConsoleScreenBufferSize(hConsole, bufferSize);
-  SetConsoleWindowInfo(hConsole, TRUE, &windowSize);
-}
+namespace cmon {
 
 class CpuUsageMonitor {
 public:
@@ -149,154 +133,4 @@ void GetProcessResourceUsage(SIZE_T &processMemoryUsage) {
               << std::endl;
   }
 }
-
-void hideCursor(HANDLE hConsole) {
-  CONSOLE_CURSOR_INFO cursorInfo;
-  GetConsoleCursorInfo(hConsole, &cursorInfo);
-  cursorInfo.bVisible = FALSE; // Hide the cursor
-  SetConsoleCursorInfo(hConsole, &cursorInfo);
-}
-
-void showCursor() {
-  HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-  CONSOLE_CURSOR_INFO cursorInfo;
-  GetConsoleCursorInfo(hConsole, &cursorInfo);
-  cursorInfo.bVisible = TRUE; // Show the cursor
-  SetConsoleCursorInfo(hConsole, &cursorInfo);
-}
-
-BOOL WINAPI consoleHandler(DWORD signal) {
-  // Reset the screen before exiting
-  if (signal == CTRL_C_EVENT || signal == CTRL_CLOSE_EVENT) {
-    system("cls");
-    showCursor();
-    exit(0);
-  }
-  return TRUE;
-}
-
-const void printBar(const std::string &name, const double usagePercent,
-                    const int &lineWidth) {
-  // Bar width is line width minus name, spaces, and brackets.
-  int barWidth = lineWidth - name.length() - 1 - 2;
-  int filled = static_cast<int>((usagePercent / 100.0f) * barWidth);
-  int usagePercentInt = static_cast<int>(usagePercent);
-
-  std::cout << name;
-  std::cout << " [";
-  for (int i = 0; i < barWidth; ++i) {
-    if (i < filled)
-      std::cout << "█";
-    else
-      std::cout << " ";
-  }
-
-  // Move cursor back and print the percentage.
-  std::cout << "\b\b\b\b" << std::setw(3) << usagePercentInt << "%";
-  std::cout << "]\n";
-}
-
-void getConsoleSize(HANDLE &hConsole, int &width, int &height) {
-
-  // Get the console screen buffer info
-  CONSOLE_SCREEN_BUFFER_INFO csbi;
-
-  if (GetConsoleScreenBufferInfo(hConsole, &csbi)) {
-    // csbi.srWindow.Left
-    // csbi.srWindow.Right
-    // csbi.srWindow.Top
-    // csbi.srWindow.Bottom
-    // csbi.dwSize.X
-    // csbi.dwSize.Y
-    width = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-    height = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
-  }
-}
-
-int main(int argc, char *argv[]) {
-  bool useBar = argc > 1 && std::string(argv[1]) == "bar" ? true : false;
-  if (argc > 1 && std::string(argv[1]) == "help") {
-    std::cout << "Usage: cmon [bar|help]\n\n";
-    std::cout << "A lightweight CPU monitoring program in terminal for Windows.\n\n";
-    std::cout << "Options:\n";
-    std::cout << "  bar   : Display info in bar graphs.\n";
-    std::cout << "  help  : Display this help message.\n";
-    return 0;
-  }
-  if (argc > 1 && std::string(argv[1]) != "bar") {
-    std::cerr << "Invalid option. Use 'help' for usage information.\n";
-    return 1;
-  }
-
-  CpuUsageMonitor cpuMonitor;
-
-  int width = 74, height = 20;
-  HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-  hideCursor(hConsole);
-  system("cls");
-  SetConsoleOutputCP(CP_UTF8);
-  SetConsoleCtrlHandler(consoleHandler, TRUE);
-  SetConsoleSize(hConsole, width, height);
-  getConsoleSize(hConsole, width, height);
-
-  std::vector<double> cpuUsagePerCore;
-  int cpuFrequency = 0;
-  double idleTime = 0.0, totalCpuUsagePerc = 0.0, memoryUsagePerc = 0.0,
-         swapUsagePerc = 0.0, totalMemory = 0.0, usedMemory = 0.0, totalSwap = 0.0,
-         usedSwap = 0.0;
-
-  std::cout << std::fixed << std::setprecision(1);
-
-  while (true) {
-    // Check if the Q or ESC key is pressed
-    if (_kbhit()) {
-      char key = _getch();
-      if (key == 'q' || key == 'Q' || key == 27) { // 27 is the ESC key
-        system("cls");
-        break;
-      }
-    }
-
-    cpuMonitor.GetCpuUsage(cpuUsagePerCore, totalCpuUsagePerc, cpuFrequency, idleTime);
-    GetMemoryUsage(memoryUsagePerc, swapUsagePerc, totalMemory, usedMemory, totalSwap,
-                   usedSwap);
-
-    ClearConsole(hConsole);
-    if (useBar) {
-      printBar(" CPU", totalCpuUsagePerc, width - 1);
-      printBar(" Mem", memoryUsagePerc, width - 1);
-      printBar("Swap", swapUsagePerc, width - 1);
-    } else {
-      std::cout
-          << "|         CPU          |         Memory        |          Swap       "
-             "   |\n";
-      std::cout
-          << "|======================|=======================|====================="
-             "===|\n";
-      std::cout << "|  CPU Usage:   " << std::setw(5) << totalCpuUsagePerc
-                << "% |   Percent:    " << std::setw(5) << memoryUsagePerc
-                << "%  |    Percent:    " << std::setw(5) << swapUsagePerc << "%  |\n";
-      std::cout << "|  Idle Time:  " << std::setw(6) << idleTime
-                << "% |  Used Mem: " << std::setw(6) << static_cast<int>(usedMemory)
-                << " MB  "
-                << "|  Used Swap: " << std::setw(6) << static_cast<int>(usedSwap)
-                << " MB  |\n";
-      std::cout << "|   CPU Freq: " << std::setw(4) << cpuFrequency
-                << " MHz | Total Mem: " << std::setw(6) << static_cast<int>(totalMemory)
-                << " MB  "
-                << "| Total Swap: " << std::setw(6) << static_cast<int>(totalSwap)
-                << " MB  |\n";
-      std::cout
-          << "|----------------------|-----------------------|---------------------"
-             "---|\n";
-      std::cout << "| Per Core:            |\n";
-      for (size_t i = 0; i < cpuUsagePerCore.size(); ++i) {
-        std::cout << "| " << std::setw(2) << i + 1 << ": " << std::setw(6)
-                  << cpuUsagePerCore[i] << "%          |\n";
-      }
-      std::cout << "|----------------------|";
-    }
-  }
-
-  return 0;
-}
+}; // namespace cmon
