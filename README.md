@@ -70,7 +70,7 @@ MinGW, I need to compile it to `.res` using `windres` first. Then, add the `cmon
 input file to the build command.
 
 ```cmd
-windres resources/cmon.rc -O coff -o cmon.res
+windres res/cmon.rc -O coff -o res/cmon.res
 ```
 
 Build binary and link `pdh.lib` library, which contains the Performance Data Helper
@@ -78,7 +78,7 @@ Build binary and link `pdh.lib` library, which contains the Performance Data Hel
 required DLL's using `-static`.
 
 ```cmd
-x86_64-w64-mingw32-g++ -static -static-libgcc -static-libstdc++ -Ofast -o build/cmon.exe Main.cpp cmon.res -lpdh -lole32 -loleaut32 -lwbemuuid
+x86_64-w64-mingw32-g++ -static -static-libgcc -static-libstdc++ -Ofast -o build/cmon.exe src/Main.cpp res/cmon.res -lpdh -lole32 -loleaut32 -lwbemuuid
 ```
 
 If you want the program to ask for admin privileges automatically when running, you can
@@ -88,7 +88,7 @@ to add its path to the user's Path environment variable:
 following.
 
 ```cmd
-mt.exe -manifest cmon.manifest -outputresource:build\cmon.exe;1
+mt.exe -manifest res/cmon.manifest -outputresource:build\cmon.exe;1
 ```
 
 Check your user's PATH environment variable.
@@ -113,9 +113,7 @@ Copy the program to a folder that I have on my user's PATH.
 copy /Y build\cmon.exe C:\Users\carl\bin
 ```
 
-### Miscellaneous
-
-#### Clear Build Folder
+### Clear Build Folder
 
 To empty the build folder, run the following command. May be useful for debugging or
 saving disk space.
@@ -124,7 +122,7 @@ saving disk space.
 del build\*.exe
 ```
 
-#### Check Size of Build
+### Size of Binary
 
 Check size of files in the build folder.
 

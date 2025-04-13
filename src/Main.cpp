@@ -3,11 +3,6 @@
 #include "CmonCpuModelInfo.cpp"
 #include "CmonPrint.cpp"
 
-#include <iostream>
-
-#pragma comment(lib, "psapi.lib") // Link the PSAPI library
-#pragma comment(lib, "pdh.lib")
-
 void ArgParse(int argc, char *argv[], bool &useBar) {
   useBar = false; // Default to false
   if (argc > 1) {
@@ -29,11 +24,10 @@ int main(int argc, char *argv[]) {
   int width = 74, height = 20;
   HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
   int cpuFrequency = 0;
-  double idleTime = 0.0;
-  double totalCpuUsagePerc = 0.0, memoryUsagePerc = 0.0, swapUsagePerc = 0.0;
-  double totalMemory = 0.0, usedMemory = 0.0;
-  double totalSwap = 0.0, usedSwap = 0.0;
-  std::vector<double> cpuUsagePerCore;
+  float totalCpuUsagePerc = 0.0, memoryUsagePerc = 0.0, swapUsagePerc = 0.0;
+  float totalMemory = 0.0, usedMemory = 0.0, idleTime = 0.0;
+  float totalSwap = 0.0, usedSwap = 0.0;
+  std::vector<float> cpuUsagePerCore;
   std::string processorName;
 
   system("cls");
@@ -43,18 +37,19 @@ int main(int argc, char *argv[]) {
   short numberOfCores = cpuMonitor.counters.size();
 
   SetupConsole(width, height, hConsole, numberOfCores, useBar);
+  // std::ios::sync_with_stdio(false);
   GetCpuInfoDetails(processorName);
 
   PrintStatic(useBar, processorName);
   while (true) {
-    CheckExitEvent();
     cpuMonitor.GetCpuUsage(cpuUsagePerCore, totalCpuUsagePerc, cpuFrequency, idleTime);
-    cmon::GetMemoryUsage(memoryUsagePerc, swapUsagePerc, totalMemory, usedMemory,
-                         totalSwap, usedSwap);
+    cpuMonitor.GetMemoryUsage(memoryUsagePerc, swapUsagePerc, totalMemory, usedMemory,
+                              totalSwap, usedSwap);
     ClearConsole(hConsole, useBar);
     Update(useBar, processorName, totalCpuUsagePerc, memoryUsagePerc, swapUsagePerc,
            idleTime, cpuFrequency, totalMemory, usedMemory, totalSwap, usedSwap,
            cpuUsagePerCore, width);
+    CheckExitEvent();
   }
   return 0;
 }
