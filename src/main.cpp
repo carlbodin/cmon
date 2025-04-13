@@ -1,16 +1,17 @@
-#include "Cmon.cpp"
-#include "CmonConsole.cpp"
-#include "CmonCpuModelInfo.cpp"
-#include "CmonPrint.cpp"
+#include "cmon.cpp"
+#include "cmon_console.cpp"
+#include "cmon_cpu_model_info.cpp"
+#include "cmon_print.cpp"
 
-void ArgParse(int argc, char *argv[], bool &useBar) {
-  useBar = false; // Default to false
+#include <iostream>
+
+void argParse(int argc, char *argv[], bool &useBar) {
   if (argc > 1) {
     std::string arg = argv[1];
     if (arg == "bar") {
       useBar = true;
     } else if (arg == "help") {
-      PrintHelp();
+      printHelp();
       exit(0);
     } else {
       std::cerr << "Invalid option. Use 'help' for usage information.\n";
@@ -20,7 +21,7 @@ void ArgParse(int argc, char *argv[], bool &useBar) {
 }
 
 int main(int argc, char *argv[]) {
-  bool useBar;
+  bool useBar = false;
   int width = 74, height = 20;
   HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
   int cpuFrequency = 0;
@@ -31,25 +32,24 @@ int main(int argc, char *argv[]) {
   std::string processorName;
 
   system("cls");
-  ArgParse(argc, argv, useBar);
+  argParse(argc, argv, useBar);
 
   cmon::CpuUsageMonitor cpuMonitor;
   short numberOfCores = cpuMonitor.counters.size();
 
-  SetupConsole(width, height, hConsole, numberOfCores, useBar);
-  // std::ios::sync_with_stdio(false);
-  GetCpuInfoDetails(processorName);
+  setupConsole(width, height, hConsole, numberOfCores, useBar);
+  getCpuInfoDetails(processorName);
 
-  PrintStatic(useBar, processorName);
+  printStatic(useBar, processorName);
   while (true) {
-    cpuMonitor.GetCpuUsage(cpuUsagePerCore, totalCpuUsagePerc, cpuFrequency, idleTime);
-    cpuMonitor.GetMemoryUsage(memoryUsagePerc, swapUsagePerc, totalMemory, usedMemory,
+    cpuMonitor.getCpuUsage(cpuUsagePerCore, totalCpuUsagePerc, cpuFrequency, idleTime);
+    cpuMonitor.getMemoryUsage(memoryUsagePerc, swapUsagePerc, totalMemory, usedMemory,
                               totalSwap, usedSwap);
-    ClearConsole(hConsole, useBar);
-    Update(useBar, processorName, totalCpuUsagePerc, memoryUsagePerc, swapUsagePerc,
+    clearConsole(hConsole, useBar);
+    update(useBar, processorName, totalCpuUsagePerc, memoryUsagePerc, swapUsagePerc,
            idleTime, cpuFrequency, totalMemory, usedMemory, totalSwap, usedSwap,
            cpuUsagePerCore, width);
-    CheckExitEvent();
+    checkExitEvent();
   }
   return 0;
 }

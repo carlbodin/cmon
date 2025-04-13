@@ -1,5 +1,5 @@
 #include <pdh.h>
-#include <string>
+#include <string> // Needed for swprintf
 #include <vector>
 
 #pragma comment(lib, "pdh.lib")
@@ -42,7 +42,7 @@ public:
 
   ~CpuUsageMonitor() { PdhCloseQuery(query); }
 
-  void GetCpuUsage(std::vector<float> &cpuUsagePerCore, float &totalCpuUsage,
+  void getCpuUsage(std::vector<float> &cpuUsagePerCore, float &totalCpuUsage,
                    int &cpuFrequency, float &idleTime) {
 
     // Collect data
@@ -70,7 +70,7 @@ public:
     idleTime = counterVal.doubleValue;
   }
 
-  void GetMemoryUsage(float &memoryUsagePerc, float &swapUsagePerc, float &totalMemory,
+  void getMemoryUsage(float &memoryUsagePerc, float &swapUsagePerc, float &totalMemory,
                       float &usedMemory, float &totalSwap, float &usedSwap) {
 
     memStatus.dwLength = sizeof(memStatus);

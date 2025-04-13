@@ -3,14 +3,14 @@
 #include <iostream>
 #include <windows.h>
 
-void HideCursor(HANDLE hConsole) {
+void hideCursor(HANDLE hConsole) {
   CONSOLE_CURSOR_INFO cursorInfo;
   GetConsoleCursorInfo(hConsole, &cursorInfo);
   cursorInfo.bVisible = FALSE; // Hide the cursor
   SetConsoleCursorInfo(hConsole, &cursorInfo);
 }
 
-void ShowCursor() {
+void showCursor() {
   HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
   CONSOLE_CURSOR_INFO cursorInfo;
   GetConsoleCursorInfo(hConsole, &cursorInfo);
@@ -18,10 +18,10 @@ void ShowCursor() {
   SetConsoleCursorInfo(hConsole, &cursorInfo);
 }
 
-void CheckExitEvent() {
+void checkExitEvent() {
   // Check for exit events (Ctrl+C or close button)
   if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) {
-    ShowCursor();
+    showCursor();
     system("cls");
     exit(0);
   }
@@ -30,14 +30,14 @@ void CheckExitEvent() {
   if (_kbhit()) {
     char key = _getch();
     if (key == 'q' || key == 'Q' || key == 27) { // 27 is the ESC key
-      ShowCursor();
+      showCursor();
       system("cls");
       exit(0);
     }
   }
 }
 
-void ClearConsole(HANDLE hConsole, bool useBar) {
+void clearConsole(HANDLE hConsole, bool useBar) {
   // Move cursor to top left corner instead of clearing the entire terminal for the new
   // loop information.
   COORD topLeft;
@@ -49,17 +49,17 @@ void ClearConsole(HANDLE hConsole, bool useBar) {
   SetConsoleCursorPosition(hConsole, topLeft);
 }
 
-BOOL WINAPI ConsoleHandler(DWORD signal) {
+BOOL WINAPI consoleHandler(DWORD signal) {
   // Reset the screen before exiting
   if (signal == CTRL_C_EVENT || signal == CTRL_CLOSE_EVENT) {
-    ShowCursor();
+    showCursor();
     system("cls");
     exit(0);
   }
   return TRUE;
 }
 
-void GetConsoleSize(HANDLE &hConsole, int &width, int &height) {
+void getConsoleSize(HANDLE &hConsole, int &width, int &height) {
 
   // Get the console screen buffer info
   CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -76,7 +76,7 @@ void GetConsoleSize(HANDLE &hConsole, int &width, int &height) {
   }
 }
 
-void SetConsoleSize(HANDLE hConsole, short width, short height, short numberOfCores,
+void setConsoleSize(HANDLE hConsole, short width, short height, short numberOfCores,
                     bool useBar) {
   // TODO: Currently hardcoded height and width variables.
   SMALL_RECT windowSize;
@@ -95,12 +95,12 @@ void SetConsoleSize(HANDLE hConsole, short width, short height, short numberOfCo
   SetConsoleWindowInfo(hConsole, TRUE, &windowSize);
 }
 
-void SetupConsole(int &width, int &height, HANDLE &hConsole, short numberOfCores,
+void setupConsole(int &width, int &height, HANDLE &hConsole, short numberOfCores,
                   bool useBar) {
-  HideCursor(hConsole);
+  hideCursor(hConsole);
   SetConsoleOutputCP(CP_UTF8);
-  SetConsoleCtrlHandler(ConsoleHandler, TRUE);
-  SetConsoleSize(hConsole, width, height, numberOfCores, useBar);
-  GetConsoleSize(hConsole, width, height);
+  SetConsoleCtrlHandler(consoleHandler, TRUE);
+  setConsoleSize(hConsole, width, height, numberOfCores, useBar);
+  getConsoleSize(hConsole, width, height);
   std::cout << std::fixed << std::setprecision(1);
 }

@@ -6,7 +6,7 @@
 #pragma comment(lib, "oleaut32.lib") // Link the OLE Automation library
 
 // Helper function to convert BSTR to std::string
-std::string BSTRToString(BSTR bstr) {
+std::string bSTRToString(BSTR bstr) {
   int wslen = SysStringLen(bstr);
   int len = WideCharToMultiByte(CP_ACP, 0, bstr, wslen, NULL, 0, NULL, NULL);
   std::string str(len, '\0');
@@ -14,7 +14,7 @@ std::string BSTRToString(BSTR bstr) {
   return str;
 }
 
-void GetCpuInfoDetails(std::string &processorName) {
+void getCpuInfoDetails(std::string &processorName) {
   // Initialize COM
   HRESULT hres = CoInitializeEx(0, COINIT_MULTITHREADED);
   if (FAILED(hres)) {
@@ -99,7 +99,7 @@ void GetCpuInfoDetails(std::string &processorName) {
     VARIANT vtProp;
     hr = pclsObj->Get(L"Name", 0, &vtProp, 0, 0);
     if (SUCCEEDED(hr) && vtProp.vt == VT_BSTR) {
-      processorName = BSTRToString(vtProp.bstrVal);
+      processorName = bSTRToString(vtProp.bstrVal);
     }
     VariantClear(&vtProp);
     pclsObj->Release();

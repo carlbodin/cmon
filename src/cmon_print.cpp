@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 
-void PrintHelp() {
+void printHelp() {
   std::cout << "Usage: cmon [bar|help]\n\n";
   std::cout << "A lightweight CPU monitoring program in terminal for Windows.\n\n";
   std::cout << "Options:\n";
@@ -10,7 +10,7 @@ void PrintHelp() {
   std::cout << "  help  : Display this help message.\n";
 }
 
-void PrintStatic(bool useBar, std::string &processorName) {
+void printStatic(bool useBar, std::string &processorName) {
   if (useBar) {
     std::cout << processorName << std::endl;
   } else {
@@ -21,7 +21,7 @@ void PrintStatic(bool useBar, std::string &processorName) {
   }
 }
 
-const void PrintBar(const std::string &name, const double usagePercent,
+const void printBar(const std::string &name, const double usagePercent,
                     const int &lineWidth) {
   // Bar width is line width minus name, spaces, and brackets.
   int barWidth = lineWidth - name.length() - 1 - 2;
@@ -42,14 +42,14 @@ const void PrintBar(const std::string &name, const double usagePercent,
   std::cout << "]\n";
 }
 
-void UpdateContentBar(const float &totalCpuUsagePerc, const float &memoryUsagePerc,
+void updateContentBar(const float &totalCpuUsagePerc, const float &memoryUsagePerc,
                       const float &swapUsagePerc, const int &width) {
-  PrintBar(" CPU", totalCpuUsagePerc, width - 1);
-  PrintBar(" Mem", memoryUsagePerc, width - 1);
-  PrintBar("Swap", swapUsagePerc, width - 1);
+  printBar(" CPU", totalCpuUsagePerc, width - 1);
+  printBar(" Mem", memoryUsagePerc, width - 1);
+  printBar("Swap", swapUsagePerc, width - 1);
 }
 
-void UpdateContent(std::string &processorName, const float &totalCpuUsagePerc,
+void updateContent(std::string &processorName, const float &totalCpuUsagePerc,
                    const float &memoryUsagePerc, const float &swapUsagePerc,
                    const float &idleTime, const int &cpuFrequency,
                    const float &totalMemory, const float &usedMemory,
@@ -78,16 +78,16 @@ void UpdateContent(std::string &processorName, const float &totalCpuUsagePerc,
   std::cout << "|----------------------|" << std::endl;
 }
 
-void Update(bool useBar, std::string &processorName, const float &totalCpuUsagePerc,
+void update(bool useBar, std::string &processorName, const float &totalCpuUsagePerc,
             const float &memoryUsagePerc, const float &swapUsagePerc,
             const float &idleTime, const int &cpuFrequency, const float &totalMemory,
             const float &usedMemory, const float &totalSwap, const float &usedSwap,
             const std::vector<float> &cpuUsagePerCore, int width) {
   // Update the console with the new information.
   if (useBar) {
-    UpdateContentBar(totalCpuUsagePerc, memoryUsagePerc, swapUsagePerc, width);
+    updateContentBar(totalCpuUsagePerc, memoryUsagePerc, swapUsagePerc, width);
   } else {
-    UpdateContent(processorName, totalCpuUsagePerc, memoryUsagePerc, swapUsagePerc,
+    updateContent(processorName, totalCpuUsagePerc, memoryUsagePerc, swapUsagePerc,
                   idleTime, cpuFrequency, totalMemory, usedMemory, totalSwap, usedSwap,
                   cpuUsagePerCore);
   }

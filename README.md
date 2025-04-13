@@ -58,10 +58,13 @@ source code, and run it. Since the executable is unsigned, the popup
 
 ### Installation
 
-`MSYS2`, `MinGW`, `build-essentials`, `g++`, and `gdb`. See
-[guide](https://code.visualstudio.com/docs/cpp/config-mingw).
+`MSYS2`, `MinGW`, `build-essentials`, `g++`, and `gdb`.
+[Here](https://code.visualstudio.com/docs/cpp/config-mingw) is a guide on getting this
+setup.
 
-Dependency `pdh.lib` already in the Windows 11 environment.
+Dependencies `pdh.lib`, `wbemuuid.lib`, `ole32.lib`, and `oleaut32.lib` are already in
+the Windows 11 environment. No [vcpkg](https://github.com/microsoft/vcpkg) environment
+is needed.
 
 ### Build
 
@@ -73,17 +76,26 @@ input file to the build command.
 windres res/cmon.rc -O coff -o res/cmon.res
 ```
 
-Build binary and link `pdh.lib` library, which contains the Performance Data Helper
-(PDH) API functions. Also, link `libgcc` and `libstdc++` DLL's explicitly. Link other
-required DLL's using `-static`.
+Build using the following command. Omit the `res/cmon.res` if you skip icon.
 
 ```cmd
 x86_64-w64-mingw32-g++ -static -static-libgcc -static-libstdc++ -Ofast -o build/cmon.exe src/Main.cpp res/cmon.res -lpdh -lole32 -loleaut32 -lwbemuuid
 ```
 
-If you want the program to ask for admin privileges automatically when running, you can
-embed a "manifest" asking for this by using the `mt` tool in the Windows SDK. Make sure
-to add its path to the user's Path environment variable:
+**Links**
+
+- The library `pdh.lib` is linked, which contains the Performance Data Helper (PDH) API
+  functions.
+- `wbemuuid.lib`, `ole32.lib`, `oleaut32.lib` are linked to include the WMI library, the
+  COM library, and the OLE Automation library, which are used for querying the system
+  for the processor's model name.
+- The DLL's `libgcc` and `libstdc++` are needed, they are linked statically.
+- Also, link other required static DLL's using `-static`.
+
+If you want the program to ask for admin privileges automatically when running, which is
+useful for automatic terminal window resizing, you can embed a "manifest" asking for
+this by using the `mt` tool in the Windows SDK. Make sure to add its path to the user's
+Path environment variable:
 `C:\Program Files (x86)\Windows Kits\10\bin\<version>\x64\mt.exe`. Then you can run the
 following.
 
