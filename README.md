@@ -23,7 +23,7 @@ addition to the RAM of your terminal window, and has a negligable CPU footprint.
 | 10:    4.7%          |
 | 11:   10.9%          |
 | 12:    8.8%          |
-|----------------------|                            Exit: Ctrl + C
+|----------------------|
 ```
 
 Run with argument `bar` to see this instead.
@@ -34,14 +34,14 @@ Run with argument `bar` to see this instead.
 Swap [███████████████████████████████████████████████████            77%]
 ```
 
-Run `help` to see program instructions.
+Run with argument `help` to see program instructions.
 
 ```plaintext
 Usage: cmon [bar|help]
 
-A lightweight CPU monitoring program for Windows 11 running in terminal.
+A lightweight CPU monitoring program in terminal for Windows.
 
-Options:\carl\git\cmon>
+Options:
   bar   : Display info in bar graphs.
   help  : Display this help message.
 ```
@@ -51,7 +51,7 @@ Options:\carl\git\cmon>
 Download the executable from
 [Releases](https://github.com/carlbodin/cmon/releases/latest), or compile it from the
 source code, and run it. Since the executable is unsigned, the popup
-`Windows protected your PC` will appear at first launch. Exit with `Ctrl + C`.
+`Windows protected your PC` will appear at first launch.
 
 ## Development Setup
 
@@ -97,18 +97,6 @@ reg query "HKCU\Environment" /v Path
 ```
 
 ### Run
-
-Run the program by using this command while the `cmon.exe` is on the path.
-
-```cmd
-cmon
-```
-
-Append command line argument `bar` to see a bar representation instead.
-
-```cmd
-cmon bar
-```
 
 Run the program directly from the build folder in separate cmd instance.
 

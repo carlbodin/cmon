@@ -120,8 +120,8 @@ void GetMemoryUsage(double &memoryUsagePerc, double &swapUsagePerc, double &tota
       swapUsagePerc = (usedSwap / totalSwap) * 100.0;
     }
   } else {
-    memoryUsagePerc = -1.0;
-    swapUsagePerc = -1.0;
+    memoryUsagePerc = 0.0;
+    swapUsagePerc = 0.0;
     totalMemory = 0.0;
     usedMemory = 0.0;
     totalSwap = 0.0;
@@ -150,8 +150,7 @@ void GetProcessResourceUsage(SIZE_T &processMemoryUsage) {
   }
 }
 
-void hideCursor() {
-  HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+void hideCursor(HANDLE hConsole) {
   CONSOLE_CURSOR_INFO cursorInfo;
   GetConsoleCursorInfo(hConsole, &cursorInfo);
   cursorInfo.bVisible = FALSE; // Hide the cursor
@@ -233,7 +232,7 @@ int main(int argc, char *argv[]) {
 
   int width = 74, height = 20;
   HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-  hideCursor();
+  hideCursor(hConsole);
   system("cls");
   SetConsoleOutputCP(CP_UTF8);
   SetConsoleCtrlHandler(consoleHandler, TRUE);
@@ -295,8 +294,7 @@ int main(int argc, char *argv[]) {
         std::cout << "| " << std::setw(2) << i + 1 << ": " << std::setw(6)
                   << cpuUsagePerCore[i] << "%          |\n";
       }
-      std::cout
-          << "|----------------------|                            Exit: Ctrl + C\n";
+      std::cout << "|----------------------|";
     }
   }
 
