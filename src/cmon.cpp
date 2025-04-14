@@ -2,13 +2,13 @@
 #include <string> // Needed for swprintf
 #include <vector>
 
-#pragma comment(lib, "pdh.lib")
-
 namespace cmon {
 
+namespace {
 PDH_FMT_COUNTERVALUE counterVal;
 MEMORYSTATUSEX memStatus;
 constexpr double BYTE_TO_MB = 1.0 / (1024.0 * 1024.0);
+} // namespace
 
 class CpuUsageMonitor {
 public:

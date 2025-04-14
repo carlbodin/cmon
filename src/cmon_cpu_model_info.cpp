@@ -1,10 +1,6 @@
 #include <Wbemidl.h> // For IWbemLocator and IWbemServices
 #include <iostream>
 
-#pragma comment(lib, "wbemuuid.lib") // Link the WMI library
-#pragma comment(lib, "ole32.lib")    // Link the COM library
-#pragma comment(lib, "oleaut32.lib") // Link the OLE Automation library
-
 // Helper function to convert BSTR to std::string
 std::string bSTRToString(BSTR bstr) {
   int wslen = SysStringLen(bstr);
