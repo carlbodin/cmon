@@ -22,6 +22,8 @@ void argParse(int argc, char *argv[], bool &useBar) {
 
 int main(int argc, char *argv[]) {
   bool useBar = false;
+  argParse(argc, argv, useBar);
+
   int width = 74, height = 20;
   HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
   int cpuFrequency = 0;
@@ -30,9 +32,6 @@ int main(int argc, char *argv[]) {
   float totalSwap = 0.0, usedSwap = 0.0;
   std::vector<float> cpuUsagePerCore;
   std::string processorName;
-
-  system("cls");
-  argParse(argc, argv, useBar);
 
   cmon::CpuUsageMonitor cpuMonitor;
   short numberOfCores = cpuMonitor.counters.size();
