@@ -1,5 +1,17 @@
 # cmon
 
+```plaintext
+     ________  _____ ______   ________  ________
+    |\   ____\|\   _ \  _   \|\   __  \|\   ___  \
+    \ \  \___|\ \  \\\__\ \  \ \  \|\  \ \  \\ \  \
+     \ \  \    \ \  \\|__| \  \ \  \\\  \ \  \\ \  \
+      \ \  \____\ \  \    \ \  \ \  \\\  \ \  \\ \  \
+       \ \_______\ \__\    \ \__\ \_______\ \__\\ \__\
+        \|_______|\|__|     \|__|\|_______|\|__| \|__|
+
+                                         by carl bodin
+```
+
 A lightweight CPU monitoring program in terminal for Windows. Uses 4.9 MB of RAM, in
 addition to the RAM of your terminal window, and has a negligable CPU footprint.
 
