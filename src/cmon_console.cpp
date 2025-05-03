@@ -97,7 +97,6 @@ void setConsoleSize(HANDLE hConsole, short width, short height, short numberOfCo
 
 void setupConsole(int &width, int &height, HANDLE &hConsole, short numberOfCores,
                   bool useBar) {
-  system("cls");
   hideCursor(hConsole);
   SetConsoleOutputCP(CP_UTF8);
   SetConsoleCtrlHandler(consoleHandler, TRUE);

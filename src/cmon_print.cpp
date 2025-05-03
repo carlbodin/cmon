@@ -10,6 +10,24 @@ void printHelp() {
   std::cout << "  help  : Display this help message.\n";
 }
 
+void printSplashScreen() {
+  system("cls");
+  std::cout << "\n";
+  std::cout << "     ________  _____ ______   ________  ________ \n";
+  std::cout << "    |\\   ____\\|\\   _ \\  _   \\|\\   __  \\|\\   ___  \\ \n";
+  std::cout
+      << "    \\ \\  \\___|\\ \\  \\\\\\__\\ \\  \\ \\  \\|\\  \\ \\  \\\\ \\  \\ \n";
+  std::cout
+      << "     \\ \\  \\    \\ \\  \\\\|__| \\  \\ \\  \\\\\\  \\ \\  \\\\ \\  \\ \n";
+  std::cout
+      << "      \\ \\  \\____\\ \\  \\    \\ \\  \\ \\  \\\\\\  \\ \\  \\\\ \\  \\ \n";
+  std::cout
+      << "       \\ \\_______\\ \\__\\    \\ \\__\\ \\_______\\ \\__\\\\ \\__\\ \n";
+  std::cout << "        \\|_______|\\|__|     \\|__|\\|_______|\\|__| \\|__| \n";
+  std::cout << "\n";
+  std::cout << "                                         by carl bodin";
+}
+
 void printStatic(bool useBar, std::string &processorName) {
   if (useBar) {
     std::cout << processorName << std::endl;

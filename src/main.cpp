@@ -23,6 +23,7 @@ void argParse(int argc, char *argv[], bool &useBar) {
 int main(int argc, char *argv[]) {
   bool useBar = false;
   argParse(argc, argv, useBar);
+  printSplashScreen();
 
   int width = 74, height = 20;
   HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -39,16 +40,22 @@ int main(int argc, char *argv[]) {
   setupConsole(width, height, hConsole, numberOfCores, useBar);
   getCpuInfoDetails(processorName);
 
+  cpuMonitor.getCpuUsage(cpuUsagePerCore, totalCpuUsagePerc, cpuFrequency, idleTime);
+  cpuMonitor.getMemoryUsage(memoryUsagePerc, swapUsagePerc, totalMemory, usedMemory,
+                            totalSwap, usedSwap);
+
+  system("cls");
   printStatic(useBar, processorName);
   while (true) {
-    cpuMonitor.getCpuUsage(cpuUsagePerCore, totalCpuUsagePerc, cpuFrequency, idleTime);
-    cpuMonitor.getMemoryUsage(memoryUsagePerc, swapUsagePerc, totalMemory, usedMemory,
-                              totalSwap, usedSwap);
     clearConsole(hConsole, useBar);
     update(useBar, processorName, totalCpuUsagePerc, memoryUsagePerc, swapUsagePerc,
            idleTime, cpuFrequency, totalMemory, usedMemory, totalSwap, usedSwap,
            cpuUsagePerCore, width);
     checkExitEvent();
+
+    cpuMonitor.getCpuUsage(cpuUsagePerCore, totalCpuUsagePerc, cpuFrequency, idleTime);
+    cpuMonitor.getMemoryUsage(memoryUsagePerc, swapUsagePerc, totalMemory, usedMemory,
+                              totalSwap, usedSwap);
   }
   return 0;
 }
